@@ -1,99 +1,107 @@
-<!DOCTYPE html><!DOCTYPE html><!DOCTYPE html><!DOCTYPE html<!DOCTYPE html<!DOCTYPE html>><!DOCTYPE html><!DOCTYPE html<html lang="vi"><!DOCTYPE html><html lang="vi">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Em nghĩ sao</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-  body {
-    height: 100vh;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #ffd6e8, #ffeef6);
-    font-family: "Segoe UI", sans-serif;
-    overflow: hidden;
-  }
-
-  .hop {
-    background: white;
-    padding: 28px 24px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    max-width: 90%;
-    z-index: 2;
-  }
-
-  img {
-    width: 180px;
-    border-radius: 14px;
-    margin-bottom: 18px;
-  }
-
-  h2 {
-    line-height: 1.4;
-    margin-bottom: 20px;
-  }
-
-  button {
-    padding: 12px 26px;
-    font-size: 16px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 8px;
-  }
-
-  #yes {
-    background-color: #ff5c8a;
-    color: white;
-  }
-
-  #no {
-    background-color: #e0e0e0;
-    position: absolute;
-  }
-
-  .signature {
-    margin-top: 16px;
-    font-style: italic;
-    color: #555;
-  }
-
-  .trai-tim {
-    position: fixed;
-    font-size: 20px;
-    animation: bay 2.5s linear forwards;
-  }
-
-  @keyframes bay {
-    from {
-      transform: translateY(0);
-      opacity: 1;
+  <meta charset="UTF-8">
+  <title>Em nghĩ sao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffd6e8, #ffeef6);
+      font-family: "Segoe UI", sans-serif;
+      overflow: visible; /* allow hearts to float outside */
     }
-    to {
-      transform: translateY(-100vh);
-      opacity: 0;
+
+    .hop {
+      background: white;
+      padding: 28px 24px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      max-width: 90%;
+      z-index: 2;
+      position: relative; /* allow absolutely positioned children inside */
     }
-  }
-</style>
+
+    img {
+      width: 180px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 26px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 8px;
+    }
+
+    #yes {
+      background-color: #ff5c8a;
+      color: white;
+    }
+
+    #no {
+      background-color: #e0e0e0;
+      position: absolute; /* positioned relative to .hop */
+      right: 24px;
+      bottom: 24px;
+    }
+
+    .signature {
+      margin-top: 16px;
+      font-style: italic;
+      color: #555;
+    }
+
+    .trai-tim {
+      position: fixed;
+      font-size: 20px;
+      animation: bay 2.5s linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes bay {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-120vh);
+        opacity: 0;
+      }
+    }
+
+    button:focus {
+      outline: 3px solid rgba(255, 92, 138, 0.25);
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="hop" id="content">
   <!-- MÈO THẬP THÒ, NGẠI NGẠI -->
-  <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="shy cat">
+  <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Mèo ngại ngùng">
 
   <h2>
     Hà có thể cho Tiến 1 cơ hội <br>
     để mình tìm hiểu nhau thêm 1 lần nữa không...
   </h2>
 
-  <button id="yes" onclick="yesClick()">Có</button>
-  <button id="no" onclick="moveNo()" ontouchstart="moveNo()">Không</button>
+  <button id="yes" onclick="yesClick()" tabindex="0" aria-label="Có">Có</button>
+  <button id="no" onclick="moveNo()" ontouchstart="moveNo()" tabindex="0" aria-label="Không">Không</button>
 </div>
 
 <!-- Nhạc YouTube (ẩn – chỉ chạy khi bấm Có) -->
@@ -102,12 +110,13 @@
   width="0"
   height="0"
   style="display:none"
-  allow="autoplay">
+  allow="autoplay; encrypted-media">
 </iframe>
 
 <script>
 function yesClick() {
-  document.getElementById("content").innerHTML = `
+  const content = document.getElementById("content");
+  content.innerHTML = `
     <h2>
       💖 Cảm ơn em vì đã tin tưởng anh thêm lần nữa<br>
       và 1 cơ hội để gần em hơn &lt;3
@@ -115,17 +124,25 @@ function yesClick() {
     <div class="signature">— làm cái này vì em. Tiến</div>
   `;
 
-  // Nhạc chạy từ giây 20
+  // Nhạc chạy từ giây 20, mute để tăng khả năng autoplay
   document.getElementById("music").src =
-    "https://www.youtube.com/embed/UgkmUWthTx0?start=20&autoplay=1";
+    "https://www.youtube.com/embed/UgkmUWthTx0?start=20&autoplay=1&mute=1";
 
   taoTraiTim();
 }
 
 function moveNo() {
   const noBtn = document.getElementById("no");
-  const x = Math.random() * (window.innerWidth - 120);
-  const y = Math.random() * (window.innerHeight - 60);
+  const container = document.getElementById("content");
+
+  // Ensure button has dimensions before calculating
+  const containerRect = container.getBoundingClientRect();
+  const btnW = noBtn.offsetWidth || 80;
+  const btnH = noBtn.offsetHeight || 36;
+
+  const x = Math.random() * Math.max(0, containerRect.width - btnW);
+  const y = Math.random() * Math.max(0, containerRect.height - btnH);
+
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
@@ -136,10 +153,10 @@ function taoTraiTim() {
     heart.className = "trai-tim";
     heart.innerHTML = "💗";
     heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.bottom = "0px";
+    heart.style.bottom = "-20px";
     document.body.appendChild(heart);
 
-    setTimeout(() => heart.remove(), 2500);
+    setTimeout(() => heart.remove(), 4000);
   }
 }
 </script>
